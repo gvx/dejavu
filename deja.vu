@@ -1,0 +1,80 @@
+fib:
+	eat 'a'
+	if > 1 a:
+		+ fib - 2 a fib - 1 a
+	else:
+		if = a 1:
+			1
+		else:
+			0
+
+. fib 10
+
+3842938434333333345345
+
+set 'a' 10
+while > a 0:
+	. a
+	set 'a' - 1 a
+
+(S)
+
+func 'fib':
+	eat 'a'
+	if > 1 a:
+		+ fib - 2 a fib - 1 a
+	else:
+		if = a 1:
+			1
+		else:
+			0
+
+labda:
+	eat 'a'
+	if > 1 a:
+		+ fib - 2 a fib - 1 a
+	else:
+		if = a 1:
+			1
+		else:
+			0
+eat 'fib'
+
+#-10: #note -- should be in language
+#	- 10 0
+
+call 'fib'
+
+#### BYTECODES       ARGUMENT    EXAMPLE
+# 01 push word       name        fib
+# 02 push number     number      49
+# 03 push identity   name
+# 04 push function   reference   34     *
+# 11 branch if zero  reference   93
+# 12 else            reference
+# 13 elseif          reference
+# 14 while           reference
+# 15 until           reference
+#
+# * can be followed by a filename
+
+#push 'a'
+#get 'a'
+
+set '(' '('
+set ')' ')'
+
+calling-convention:
+	a ( 1 2 3 ) # variable multiple arguments
+	a 0 # a single argument or the default number of arguments
+
+varargs:
+	dup
+	if = (:
+		while not = ) dup:
+			#do something
+	else:
+		#do something else
+
+e: # example: e 3 (= 1000) * 5 e 2 (= 500)
+	^ swap 10

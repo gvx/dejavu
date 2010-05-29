@@ -1,0 +1,40 @@
+func 'test':
+	. 112
+
+test
+
+func 'test2':
+	. 8 test . 9
+
+test2
+
+func 'test3':
+	if > 1 dup:
+		test3 - 1 . dup
+	else:
+		.
+
+test3 5
+
+if 0:
+	. -999
+else:
+	. -666
+. -111
+
+fib:
+	eat 'a'
+	if > 1 a:
+		+ fib - 2 a fib - 1 a
+	else:
+		if = a 1:
+			1
+		else:
+			0
+
+set 'N' 1
+while > 10 N:
+	. fib N
+	set 'N' + 1 N
+
+(S)

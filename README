@@ -1,0 +1,38 @@
+This is Déjà Vu. You might never have heard of this programming language before, but if you look at example code files, they will look familiar. “Hey,” you'll think, “haven't I seen this before?”
+
+And that is Déjà Vu. (Don't worry, you can write it as Deja Vu or even as deja vu if you prefer.)
+
+But seriously, I will not explain what Déjà Vu is or how to write in it here. There will be documentation and example files that will help you a lot better than I could do here.
+
+The technical side: both the compiler and virtual machine are written in Python. The version I used while developing was 2.6.4, but 2.5 and 3.0+ will probably handle them fine. They require no modules outside of the standard library.
+
+There is no bytecode support for negative numbers yet. Negative numbers in source, like “-25”, are converted by the compiler to a subtraction by zero (as in “- 25 0”). (No longer true, they have their own, unique representation now)
+
+Another language quirk: for identifiers, almost any character is allowed. The exceptions are a space and a newline. Starting and ending an identifier with “'”, having identifiers composed entirely of digits, or ending one with “:” are allowed, but I strongly recommend not to use them as such.
+
+On running the damn thing: the compiler (dejac.py) takes source from stdin and outputs bytecode to stdout, but the virtual machine (deja.py) takes a command line argument. If you want it to read from stdin, supply “-” as file name. If you supply no file name, interactive mode will be started.
+
+$ python dejac.py < source.vu > bytecode.djv #TODO: think of better file name extensions
+$
+
+$ python deja.py file.vu
+(Runs file)
+$
+
+$ python dejac.py < source.vu | python deja.py -
+(Runs file)
+$
+
+$ python deja.py
+Déjà Vu v0.0.0
+
+: . + 10 5
+15
+: if = 1 1:
+- 	. + dup 5
+- 
+10
+: exit
+$
+
+Mathematical operators (“+”, “-”, “*”, “/” and “^”) operate in “Reverse Reverse Polish notation”: in bytecode, it is converted to Reverse Polish notation. This means that “- 5 10” in source is translated in bytecode to “10 5 -”, which, converted to infix notation, means “10 - 5”, or 5.
