@@ -14,6 +14,9 @@ import atexit
 atexit.register(readline.write_history_file, histfile)
 del os, histfile
 
+def debug_print(*args):
+	print ("\x1b[33m"+str(args)+"\x1b[0m").rjust(89)
+
 from optparse import OptionParser
 #from numbers import Number
 
@@ -91,8 +94,8 @@ class Env(object):
 			return self.stack.pop()
 		print('stack empty!')
 		ref = self.returnstack[-1]
-		print(ref.index)
-		print(repr(ref.func.code[ref.index - 12: ref.index + 13]))
+		debug_print(ref.index)
+		debug_print(repr(ref.func.code[ref.index - 12: ref.index + 13]))
 		raise DejaVuRunTimeError("Stack empty", self)
 		return 0
 	def push(self, n):
@@ -122,11 +125,11 @@ class Env(object):
 			c = dejac.bytecodename[bytecode[index]]
 		except KeyError as e:
 			raise DejaVuRunTimeError('wrong bytecode %s (%s) on position %s'%(ord(e.args[0]), e.args[0], index), self)
-		print(index, bytecode[index], c, c.startswith('jmp') and self.readnum(bytecode,index+1)[0] or None)
+		debug_print(index, bytecode[index], c, c.startswith('jmp') and self.readnum(bytecode,index+1)[0] or None)
 		index += 1
 		if c == 'push word':
 			st, index = self.readstr(bytecode, index)
-			print(st)
+			debug_print(st)
 			self.call(st)
 		elif c == 'push number':
 			n, index = self.readnum(bytecode, index)
@@ -141,7 +144,7 @@ class Env(object):
 		elif c == 'jmp':
 			n, index = self.readnum(bytecode, index)
 			index += n
-			print('JMP', n)
+			debug_print('JMP', n)
 		elif c == 'jmp if zero':
 			n, index = self.readnum(bytecode, index)
 			if self.pop() == 0:
@@ -153,7 +156,7 @@ class Env(object):
 		elif c == 'line':
 			self.line_i, index = self.readnum(bytecode, index)
 			self.line, index = self.readstr(bytecode, index)
-			print(self.line_i, self.line)
+			debug_print(self.line_i, self.line)
 			self.returnstack[-1].line_i = self.line_i
 			self.returnstack[-1].line = self.line
 			#print('LINE', self.line, self.line_i)

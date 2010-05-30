@@ -95,6 +95,7 @@ class Context(object):
 			T = self._acc[i][0]
 			if (T.startswith('jmp') or T=='push function'):
 				loc=self._acc[i][1]
+				#if self._acc[refs[i+loc]][0] == 'else'
 				self._acc[i] = (T, refs[i+loc]-refs[i+1])
 				#sys.stderr.write(str(loc))
 				#sys.stderr.write('\n')
@@ -122,11 +123,11 @@ class Context(object):
 			sys.stdout.write('\n')
 			#if stmt in ('if', 'else', 'elseif'):
 			p = 0
-			if stmt == 'if':
-				line = line.strip()
-				if line.endswith(':') and line[:-1].strip() == 'else':
-					sys.stdout.write('ELSE-CLAUSE\n')
-					p = 1
+			#if stmt == 'if':
+			#	line = line.strip()
+			#	if line.endswith(':') and line[:-1].strip() == 'else':
+			#		sys.stdout.write('ELSE-CLAUSE\n')
+			#		p = 1
 			if stmt in ('while', 'until'):
 				#self.add('jmp if not zero', prefacc - len(self._acc))
 				self.add('jmp', prefacc - len(self._acc))
