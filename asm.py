@@ -32,7 +32,7 @@ def dis_asm(bytecode): #disassembler
 	lacc = 1
 	while index < len(bytecode):
 		ref[len(acc)] = index
-		refr[index] = len(acc)
+		refr[index+1] = len(acc)
 		d = shortcodename[dejac.bytecodename[bytecode[index]]]
 		#print(d, index)
 		if d == 'line':
@@ -51,7 +51,9 @@ def dis_asm(bytecode): #disassembler
 		if acc[i][0] in address_codes:
 			j = acc[i][1] + (acc[i][0] != 'FUNC' and ref[i] or 0)
 			#print(ref[i], ref[i]+acc[i][1], (ref[i]+acc[i][1]) in refr and refr[ref[i]+acc[i][1]], acc[i], i, file=sys.stderr)
-			lid = i + refr[j]
+			lid = i + refr.get(j, 0)
+			if j not in refr:
+				print(i, j, refr.get(j+1, None), refr.get(j-1, None), file=sys.stderr)
 			if lid not in labels:
 				lbl = 'label' + str(lacc)
 				labels[lid] = lbl
@@ -60,8 +62,8 @@ def dis_asm(bytecode): #disassembler
 			lacc += 1
 			acc[i] = acc[i][0], lbl
 	for i in range(len(acc)):
-		#if i in labels:
-		#	acc[i] = (labels[i] + ':', acc[i][0]), acc[i][1]
+		if i in labels:
+			acc[i] = (labels[i] + ':',) + acc[i]
 		acc[i] = ' '.join(str(x) for x in acc[i])
 	return '\n'.join(acc)+'\n'
 
