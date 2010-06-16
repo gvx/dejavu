@@ -101,3 +101,8 @@ def exit(env):
 
 def return_(env):
 	env.returnstack.pop()
+
+def alias(env):
+	tmp = env.pop()
+	tmp2 = env.get(env.pop())
+	env.set(tmp, tmp2)

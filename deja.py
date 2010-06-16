@@ -60,22 +60,25 @@ class Env(object):
 		self.idents = default_idents()
 		self.stack = []
 		self.returnstack = []
-	def decodenumber(self, string):
+	@staticmethod
+	def decodenumber(string):
 		n = 0
 		exp = 0
 		for char in string:
 			n += ord(char) * 256**exp
 			exp += 1
 		return n
-	def readnum(self, bytecode, index):
+	@classmethod
+	def readnum(cls, bytecode, index):
 		size = ord(bytecode[index])
 		neg = False
 		if size > 127:
 			size = 255-size
 			neg = True
-		n = self.decodenumber(bytecode[index+1:index+1+size])
+		n = cls.decodenumber(bytecode[index+1:index+1+size])
 		return neg and -n or n, index+1+size
-	def readstr(self, bytecode, index):
+	@staticmethod
+	def readstr(bytecode, index):
 		size = ord(bytecode[index])
 		return bytecode[index+1:index+1+size], index+1+size
 	def get(self, ident):
@@ -219,34 +222,35 @@ def interactive(env=None):
 			except DejaVuRunTimeError as e:
 				print(e)
 
-parser = OptionParser(prog = 'deja', usage = '%prog [options] file',
-                      version = '%prog 0.0',
-                      description = u'Déjà Vu is a general purpose '
-                                     'stack-based programming language.')
-parser.add_option("-i", "--interactive", action = 'store_true',
-                  default = False, help="launch an interactive session after running the supplied files")
-parser.add_option("-t", dest="total", action = 'store_true',
-                  default = False, help="show the total of all rolls")
-parser.add_option("-l", dest="lowest", action = 'store_true',
-                  default = False, help="show the lowest of each roll")
-parser.add_option("-s", dest="sort", action = 'store_true',
-                  default = False, help="sort the results of each roll"
-                                        "(from lowest to highest)")
-parser.add_option("-S", "--separator", dest="separator", default = 'nl',
-				metavar = 'SEP',
-				#type = 'choice', choices=['null', 'nl'],
-				help="change the separator (use 'null' for a null character and 'nl' for a newline, anything else is literal separator) (default: %default)")
-(options, args) = parser.parse_args()
-if not len(args):
-	interactive()
-else:
-	if args[0] == '-':
-		f = sys.stdin
-	else:
-		f = open(args[0])
-	try:
-		run(f.read())
-	except DejaVuRunTimeError as e:
-		print(e)
-	if options.interactive:
+if __name__ == '__main__':
+	parser = OptionParser(prog = 'deja', usage = '%prog [options] file',
+	                      version = '%prog 0.0',
+	                      description = u'Déjà Vu is a general purpose '
+	                                     'stack-based programming language.')
+	parser.add_option("-i", "--interactive", action = 'store_true',
+	                  default = False, help="launch an interactive session after running the supplied files")
+	parser.add_option("-t", dest="total", action = 'store_true',
+	                  default = False, help="show the total of all rolls")
+	parser.add_option("-l", dest="lowest", action = 'store_true',
+	                  default = False, help="show the lowest of each roll")
+	parser.add_option("-s", dest="sort", action = 'store_true',
+	                  default = False, help="sort the results of each roll"
+	                                        "(from lowest to highest)")
+	parser.add_option("-S", "--separator", dest="separator", default = 'nl',
+					metavar = 'SEP',
+					#type = 'choice', choices=['null', 'nl'],
+					help="change the separator (use 'null' for a null character and 'nl' for a newline, anything else is literal separator) (default: %default)")
+	(options, args) = parser.parse_args()
+	if not len(args):
 		interactive()
+	else:
+		if args[0] == '-':
+			f = sys.stdin
+		else:
+			f = open(args[0])
+		try:
+			run(f.read())
+		except DejaVuRunTimeError as e:
+			print(e)
+		if options.interactive:
+			interactive()

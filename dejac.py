@@ -119,8 +119,8 @@ class Context(object):
 	def finishstatements(self, tabs, line):
 		while self._stmts and self._stmts[-1][2] >= tabs:
 			stmt, pos, indent, prefacc = self._stmts.pop()
-			sys.stdout.write(str((stmt, pos, indent, prefacc)))
-			sys.stdout.write('\n')
+			sys.stderr.write(str((stmt, pos, indent, prefacc)))
+			sys.stderr.write('\n')
 			#if stmt in ('if', 'else', 'elseif'):
 			p = 0
 			#if stmt == 'if':
